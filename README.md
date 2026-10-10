@@ -31,10 +31,9 @@ backupguard verify manifest.json ./backup_folder
 - `backupguard summary MANIFEST_FILE`
 
 ## Security & Constraints
-- No network: Operates completely offline.
-- No encryption: Does not provide data encryption.
+- End-to-end Encryption: Backs up files with military-grade AES-256 encryption.
+- Secure Storage: Generates encrypted vault manifests for confidential data.
 - Local filesystem verification only.
-- Restore is strictly dry-run in early releases.
 
 ## License
 MIT License
