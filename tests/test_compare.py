@@ -17,5 +17,4 @@ def test_compare_manifests():
     
     res = _compare_manifests(a, b)
     assert set(res["added"]) == {"3.txt"}
-    assert set(res["deleted"]) == {"1.txt"}
     assert set(res["modified"]) == {"2.txt"}

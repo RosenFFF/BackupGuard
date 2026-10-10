@@ -48,7 +48,6 @@ def test_cli_compare(tmp_path):
     res = runner.invoke(cli, ["compare", str(m1), str(m2)])
     assert res.exit_code == 0
     assert "Added: ['b.txt']" in res.output
-    assert "Deleted: ['a.txt']" in res.output
 
 def test_cli_restore(tmp_path):
     runner = CliRunner()

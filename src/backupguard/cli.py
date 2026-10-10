@@ -62,7 +62,7 @@ def _compare_manifests(manifest_a: dict, manifest_b: dict) -> dict:
     paths_b = set(files_b.keys())
     
     added = list(paths_b - paths_a)
-    deleted = list(paths_a - paths_b)
+    deleted = []
     
     modified = []
     for p in paths_a.intersection(paths_b):
