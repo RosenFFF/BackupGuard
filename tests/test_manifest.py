@@ -31,3 +31,19 @@ def test_load_manifest_invalid(tmp_path):
     
     with pytest.raises(ManifestError):
         load_manifest(out)
+
+def test_atomic_write_preserves_existing_on_failure(tmp_path):
+    out = tmp_path / "manifest.json"
+    original = {"version": "0.1.0", "files": {"orig.txt": {"size": 10}}}
+    out.write_text(json.dumps(original))
+    
+    # Simulate a crash during json dumping by passing an un-serializable object
+    bad_manifest = {"version": "0.1.0", "unserializable": object()}
+    
+    with pytest.raises(TypeError):
+        save_manifest(bad_manifest, out)
+        
+    # With atomic write, the original manifest remains intact and readable.
+    # Without atomic write, opening 'w' truncated the file before dumping failed!
+    loaded = load_manifest(out)
+    assert loaded == original

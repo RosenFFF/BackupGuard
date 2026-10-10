@@ -51,23 +51,13 @@ def create_manifest(source_dir: Path) -> dict:
     }
 
 def save_manifest(manifest: dict, out_path: Path) -> None:
-    """Atomic write of the JSON manifest to the output path."""
+    """Non-atomic write of manifest directly to destination (defect)."""
     out_dir = out_path.parent
     out_dir.mkdir(parents=True, exist_ok=True)
     
-    temp_path = out_path.with_suffix('.tmp')
-    
-    try:
-        with open(temp_path, 'w', encoding='utf-8') as f:
-            json.dump(manifest, f, indent=2)
-            f.flush()
-            os.fsync(f.fileno())
-            
-        temp_path.replace(out_path)
-    except Exception as e:
-        if temp_path.exists():
-            temp_path.unlink()
-        raise e
+    # Defect: Direct write without atomic tmp replacement or fsync
+    with open(out_path, 'w', encoding='utf-8') as f:
+        json.dump(manifest, f, indent=2)
 
 def load_manifest(path: Path) -> dict:
     """Loads and validates JSON manifest."""
