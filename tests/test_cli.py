@@ -13,6 +13,16 @@ def test_cli_summary(tmp_path):
     assert result.exit_code == 0
     assert "Version: 0.1.0" in result.output
 
+def test_cli_summary_json(tmp_path):
+    runner = CliRunner()
+    m = tmp_path / "manifest.json"
+    m.write_text(json.dumps({"version": "0.1.0", "files": {}, "file_count": 0, "total_bytes": 0}))
+    
+    result = runner.invoke(cli, ["summary", str(m), "--json-output"])
+    assert result.exit_code == 0
+    assert '"version": "0.1.0"' in result.output
+    assert '"file_count": 0' in result.output
+
 def test_cli_snapshot_and_verify(tmp_path):
     runner = CliRunner()
     src = tmp_path / "source"

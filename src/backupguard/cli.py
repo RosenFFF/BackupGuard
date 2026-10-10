@@ -124,15 +124,27 @@ def restore(manifest_path: Path, target_dir: Path, dry_run: bool):
 
 @cli.command()
 @click.argument("manifest_path", type=click.Path(exists=True, dir_okay=False, path_type=Path))
-def summary(manifest_path: Path):
+@click.option("--json-output", is_flag=True, help="Output summary in structured JSON format")
+def summary(manifest_path: Path, json_output: bool):
     """Print summary of a manifest."""
     try:
         manifest = load_manifest(manifest_path)
-        click.echo(f"Version: {manifest.get('version')}")
-        click.echo(f"Created: {manifest.get('created_at')}")
-        click.echo(f"Root: {manifest.get('root_name')}")
-        click.echo(f"Files: {manifest.get('file_count')}")
-        click.echo(f"Total Bytes: {manifest.get('total_bytes')}")
+        if json_output:
+            import json
+            data = {
+                "version": manifest.get("version"),
+                "created_at": manifest.get("created_at"),
+                "root_name": manifest.get("root_name"),
+                "file_count": manifest.get("file_count"),
+                "total_bytes": manifest.get("total_bytes")
+            }
+            click.echo(json.dumps(data, indent=2))
+        else:
+            click.echo(f"Version: {manifest.get('version')}")
+            click.echo(f"Created: {manifest.get('created_at')}")
+            click.echo(f"Root: {manifest.get('root_name')}")
+            click.echo(f"Files: {manifest.get('file_count')}")
+            click.echo(f"Total Bytes: {manifest.get('total_bytes')}")
         sys.exit(0)
     except BackupGuardError as e:
         click.echo(f"Error: {e}", err=True)
